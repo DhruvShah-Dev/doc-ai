@@ -1,0 +1,56 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f8f9fa;
+}
+
+.bg-bu-green {
+    background-color: #003B2E;
+}
+
+.text-bu-green {
+    color: #003B2E;
+}
+
+.border-bu-green {
+    border-color: #003B2E;
+}
+
+.chat-bubble-user {
+    background-color: #E6F2EF;
+    border-radius: 18px 18px 0 18px;
+}
+
+.chat-bubble-bot {
+    background-color: white;
+    border-radius: 18px 18px 18px 0;
+    border: 1px solid #e2e8f0;
+}
+
+.file-dropzone {
+    border: 2px dashed #cbd5e0;
+    transition: all 0.3s ease;
+}
+
+.file-dropzone.active {
+    border-color: #003B2E;
+    background-color: #f0fff9;
+}
+
+.loading-dots::after {
+    content: '.';
+    animation: dots 1.5s steps(5, end) infinite;
+}
+
+@keyframes dots {
+    0%, 20% { content: '.'; }
+    40% { content: '..'; }
+    60% { content: '...'; }
+    80%, 100% { content: ''; }
+}
+
+.document-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
