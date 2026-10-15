@@ -17,6 +17,7 @@ Install Python dependencies from the repository root:
 
 ```bash
 python -m venv .venv
+# Activate .venv (PowerShell: .\\.venv\\Scripts\\Activate.ps1; macOS/Linux: source .venv/bin/activate)
 python -m pip install -r backend/requirements.txt
 ```
 
