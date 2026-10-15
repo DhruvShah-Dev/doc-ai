@@ -203,7 +203,7 @@ function App() {
                     >
                         <i className="fas fa-cloud-upload-alt text-3xl text-gray-400 mb-2"></i>
                         <p className="text-center text-gray-600">Drag & drop or click to upload</p>
-                        <p className="text-xs text-gray-500 mt-2">Supported: PDF, DOCX, TXT, PPTX</p>
+                        <p className="text-xs text-gray-500 mt-2">Supported: PDF, DOCX, TXT</p>
                         <input type="file" ref={fileInputRef} onChange={handleFileChange} className="hidden" multiple />
                     </div>
 
