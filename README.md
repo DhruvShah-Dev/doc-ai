@@ -47,6 +47,7 @@ The first question triggers a download of the quantized Phi-2 GGUF model into `b
 ## Limits and privacy notes
 
 - Scanned PDFs need OCR, which this project does not provide.
+- Uploads return a small extraction-quality summary and reject documents with no usable extracted text. Try the safe example in [samples](samples/README.md).
 - Generated answers can be incorrect; check them against the source documents.
 - The frontend uses CDN scripts, and the model downloads from Hugging Face. For an offline deployment, vendor those assets and provide the model locally.
 - This is a local research prototype. Its API uses permissive CORS and has no authentication; do not expose it to untrusted networks.

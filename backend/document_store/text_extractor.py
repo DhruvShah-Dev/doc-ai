@@ -3,6 +3,7 @@ import docx
 import logging
 from typing import Optional
 import io
+from pathlib import Path
 
 logger = logging.getLogger(__name__)
 
@@ -10,7 +11,8 @@ def extract_text(filepath: str) -> Optional[str]:
     try:
         logger.info(f"Extracting text from {filepath}")
         
-        if filepath.endswith('.pdf'):
+        extension = Path(filepath).suffix.lower()
+        if extension == '.pdf':
             text = ""
             with pdfplumber.open(filepath) as pdf:
                 for i, page in enumerate(pdf.pages):
@@ -23,11 +25,11 @@ def extract_text(filepath: str) -> Optional[str]:
                         continue
             return text.strip()
             
-        elif filepath.endswith('.docx'):
+        elif extension == '.docx':
             doc = docx.Document(filepath)
             return "\n\n".join([para.text for para in doc.paragraphs if para.text.strip()])
             
-        elif filepath.endswith('.txt'):
+        elif extension == '.txt':
             with open(filepath, 'r', encoding='utf-8', errors='ignore') as f:
                 return f.read()
                 

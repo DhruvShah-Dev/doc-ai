@@ -1,0 +1,5 @@
+DocAI sample document
+
+The analytics team reviews source records before publishing a dashboard. Each
+report includes a source date, a row count, and a clear description of missing
+values. Reviewers can use these details to decide whether a chart is ready.

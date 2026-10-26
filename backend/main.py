@@ -2,6 +2,7 @@ from fastapi import FastAPI, UploadFile, File, Form, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from document_store.text_extractor import extract_text
+from document_store.quality import describe_text
 from document_store.vector_store import add_document, search_documents
 from models.llm_model import generate_answer
 import os
@@ -47,22 +48,26 @@ async def upload_file(file: UploadFile = File(...)):
         if file_size > MAX_FILE_SIZE_MB * 1024 * 1024:
             raise HTTPException(status_code=400, detail=f"File too large. Max size is {MAX_FILE_SIZE_MB}MB")
         
-        if not any(file.filename.lower().endswith(ext) for ext in SUPPORTED_FILE_TYPES):
+        safe_name = os.path.basename(file.filename or "")
+        if not safe_name or not any(safe_name.lower().endswith(ext) for ext in SUPPORTED_FILE_TYPES):
             raise HTTPException(status_code=400, detail="Unsupported file type")
         
         # Save file
-        file_location = os.path.join(UPLOAD_FOLDER, file.filename)
+        file_location = os.path.join(UPLOAD_FOLDER, safe_name)
         with open(file_location, "wb+") as f:
             f.write(await file.read())
         
-        logger.info(f"Processing file: {file.filename}")
+        logger.info(f"Processing file: {safe_name}")
         
         # Extract and index text
         start_time = time.time()
         text = extract_text(file_location)
         logger.info(f"Extracted text length: {len(text)} chars")
+        quality = describe_text(text)
+        if not quality["has_usable_text"]:
+            raise HTTPException(status_code=422, detail="No usable text was extracted. Scanned PDFs need OCR before upload.")
         
-        success = add_document(text, file.filename)
+        success = add_document(text, safe_name)
         if not success:
             raise HTTPException(status_code=500, detail="Failed to index document")
         
@@ -72,11 +77,14 @@ async def upload_file(file: UploadFile = File(...)):
         return JSONResponse(
             content={
                 "status": "success",
-                "filename": file.filename,
-                "processing_time": f"{process_time:.2f}s"
+                "filename": safe_name,
+                "processing_time": f"{process_time:.2f}s",
+                "extraction_quality": quality,
             }
         )
         
+    except HTTPException:
+        raise
     except Exception as e:
         logger.error(f"Upload error: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
